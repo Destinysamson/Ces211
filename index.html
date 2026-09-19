@@ -3,54 +3,583 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App</title>
+    <title>Quiz App - CES211</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .quiz-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; text-align: center; }
-        button { display: block; width: 100%; margin: 10px 0; padding: 10px; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        .correct { background-color: #28a745 !important; }
-        .wrong { background-color: #dc3545 !important; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .quiz-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        h2 { color: #333; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        button.option { padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9; cursor: pointer; text-align: left; font-size: 16px; }
+        button.option:hover { background-color: #e9e9e9; }
+        button.correct { background-color: #d4edda !important; border-color: #c3e6cb !important; }
+        button.wrong { background-color: #f8d7da !important; border-color: #f5c6cb !important; }
+        #feedback { margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h2 id="question">Question Text</h2>
-        <div id="options-container"></div>
-        <div id="feedback"></div>
-    </div>
 
-    <script>
-        const quizData = [
-            { question: "What is 2 + 2?", a: "3", b: "4", c: "5", correct: "b" }
-        ];
-        let currentQuestion = 0;
-        const questionEl = document.getElementById('question');
-        const optionsContainer = document.getElementById('options-container');
+<div class="quiz-container">
+    <h2 id="question-text">Question Text</h2>
+    <div id="options-container"></div>
+    <div id="feedback"></div>
+</div>
 
-        function loadQuestion() {
-            const currentData = quizData[currentQuestion];
-            questionEl.innerText = currentData.question;
-            optionsContainer.innerHTML = '';
-            ['a', 'b', 'c'].forEach(option => {
-                const button = document.createElement('button');
-                button.innerText = currentData[option];
-                button.onclick = () => checkAnswer(option, button);
-                optionsContainer.appendChild(button);
-            });
-        }
-
-        function checkAnswer(selected, button) {
-            const correct = quizData[currentQuestion].correct;
-            const buttons = optionsContainer.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = true);
-            if (selected === correct) {
-                button.classList.add('correct');
-            } else {
-                button.classList.add('wrong');
-            }
-        }
-        loadQuestion();
-    </script>
-</body>
-</html>
+<script>
+    const quizData = [
+        {
+            question: "1. One major objective of entrepreneurship education is to cultivate an ______ mindset.",
+            a: "Administrative",
+            b: "Entrepreneurial",
+            c: "Political",
+            d: "Bureaucratic",
+            correct: "b"
+        },
+        {
+            question: "2. Entrepreneurship education develops students' ability to recognize and ______ opportunities.",
+            a: "reject",
+            b: "avoid",
+            c: "seize",
+            d: "postpone",
+            correct: "c"
+        },
+        {
+            question: "3. A proactive, risk-taking and ______ approach to problem-solving is encouraged by entrepreneurship education.",
+            a: "traditional",
+            b: "innovative",
+            c: "passive",
+            d: "conservative",
+            correct: "b"
+        },
+        {
+            question: "4. Entrepreneurship education teaches the fundamentals of business planning, financial management and ______ acquisition.",
+            a: "resource",
+            b: "political",
+            c: "cultural",
+            d: "social",
+            correct: "a"
+        },
+        {
+            question: "5. Developing business models, prototyping and customer ______ are practical entrepreneurial skills.",
+            a: "rejection",
+            b: "validation",
+            c: "avoidance",
+            d: "replacement",
+            correct: "b"
+        },
+        {
+            question: "6. Entrepreneurship education prepares students to navigate the challenges and ______ of the entrepreneurial process.",
+            a: "certainties",
+            b: "uncertainties",
+            c: "profits",
+            d: "policies",
+            correct: "b"
+        },
+        {
+            question: "7. One learning outcome of entrepreneurship education is the ability to identify opportunities, take calculated risks and ______.",
+            a: "innovate",
+            b: "speculate",
+            c: "withdraw",
+            d: "complain",
+            correct: "a"
+        },
+        {
+            question: "8. Effective communication and ______ are important entrepreneurial learning outcomes.",
+            a: "isolation",
+            b: "collaboration",
+            c: "competition",
+            d: "separation",
+            correct: "b"
+        },
+        {
+            question: "9. Adaptability refers to the capacity to adjust to changing ______.",
+            a: "circumstances",
+            b: "salaries",
+            c: "positions",
+            d: "accounts",
+            correct: "a"
+        },
+        {
+            question: "10. The skill to generate innovative solutions to problems is known as ______.",
+            a: "creativity",
+            b: "accounting",
+            c: "delegation",
+            d: "negotiation",
+            correct: "a"
+        },
+        {
+            question: "11. The ability to prioritize tasks, set goals and manage time efficiently is called ______ management.",
+            a: "financial",
+            b: "time",
+            c: "human",
+            d: "resource",
+            correct: "b"
+        },
+        {
+            question: "12. The commitment to stay curious and continuously expand one's knowledge is known as ______ learning.",
+            a: "traditional",
+            b: "continuous",
+            c: "temporary",
+            d: "seasonal",
+            correct: "b"
+        },
+        {
+            question: "13. Entrepreneurship education can reduce dependence on traditional ______-seeking.",
+            a: "business",
+            b: "employment",
+            c: "job",
+            d: "market",
+            correct: "c"
+        },
+        {
+            question: "14. Entrepreneurship involves creating new business ideas and transforming them into tangible goods and ______.",
+            a: "capital",
+            b: "services",
+            c: "theories",
+            d: "policies",
+            correct: "b"
+        },
+        {
+            question: "15. According to Schumpeter, entrepreneurship involves new combinations of ______.",
+            a: "employees",
+            b: "resources",
+            c: "governments",
+            d: "customers",
+            correct: "b"
+        },
+        {
+            question: "16. The success of entrepreneurship hinges largely on creativity and ______.",
+            a: "taxation",
+            b: "innovation",
+            c: "bureaucracy",
+            d: "employment",
+            correct: "b"
+        },
+        {
+            question: "17. Which of the following is a characteristic of entrepreneurship?",
+            a: "Risk-taking",
+            b: "Risk avoidance",
+            c: "Dependence",
+            d: "Inactivity",
+            correct: "a"
+        },
+        {
+            question: "18. Entrepreneurship involves transforming raw materials into finished products through ______ addition.",
+            a: "market",
+            b: "value",
+            c: "political",
+            d: "social",
+            correct: "b"
+        },
+        {
+            question: "19. Entrepreneurship is regarded as a ______-oriented activity.",
+            a: "result",
+            b: "government",
+            c: "family",
+            d: "salary",
+            correct: "a"
+        },
+        {
+            question: "20. One major objective of entrepreneurship is the creation of ______ opportunities.",
+            a: "employment",
+            b: "political",
+            c: "recreational",
+            d: "foreign",
+            correct: "a"
+        },
+        {
+            question: "21. Entrepreneurship contributes to ______ alleviation through employment creation.",
+            a: "poverty",
+            b: "technology",
+            c: "competition",
+            d: "inflation",
+            correct: "a"
+        },
+        {
+            question: "22. An entrepreneur is a generator of business ideas, organizer of resources and ______ of business.",
+            a: "critic",
+            b: "manager",
+            c: "customer",
+            d: "employee",
+            correct: "b"
+        },
+        {
+            question: "23. An entrepreneur must have confidence in himself or herself and believe in his or her ______.",
+            a: "competitors",
+            b: "ideas",
+            c: "employees",
+            d: "customers",
+            correct: "b"
+        },
+        {
+            question: "24. Which of the following is a characteristic of a good entrepreneur?",
+            a: "Pessimism",
+            b: "Optimism",
+            c: "Laziness",
+            d: "Indecision",
+            correct: "b"
+        },
+        {
+            question: "25. Intrapreneurship creates opportunities for ______ to exhibit entrepreneurial skills within an organization.",
+            a: "customers",
+            b: "employees",
+            c: "competitors",
+            d: "suppliers",
+            correct: "b"
+        },
+        {
+            question: "26. The psychological theory of entrepreneurship emphasizes personality traits, locus of control and the need for ______.",
+            a: "achievement",
+            b: "employment",
+            c: "taxation",
+            d: "ownership",
+            correct: "a"
+        },
+        {
+            question: "27. Entrepreneurship involves creating or obtaining ______ value.",
+            a: "economic",
+            b: "political",
+            c: "cultural",
+            d: "personal",
+            correct: "a"
+        },
+        {
+            question: "28. Entrepreneurs take the majority of the risks and reap the majority of the ______.",
+            a: "losses",
+            b: "returns",
+            c: "expenses",
+            d: "taxes",
+            correct: "b"
+        },
+        {
+            question: "29. Which of the following is a type of entrepreneurship?",
+            a: "Cultural entrepreneurship",
+            b: "Administrative entrepreneurship",
+            c: "Bureaucratic entrepreneurship",
+            d: "Government entrepreneurship",
+            correct: "a"
+        },
+        {
+            question: "30. A well-written ______ plan is an indicator of entrepreneurial success.",
+            a: "business",
+            b: "political",
+            c: "family",
+            d: "academic",
+            correct: "a"
+        },
+        {
+            question: "31. Market indicators include business-to-business and business-to-______ models.",
+            a: "government",
+            b: "customer",
+            c: "employee",
+            d: "supplier",
+            correct: "b"
+        },
+        {
+            question: "32. Which of the following is an industry indicator?",
+            a: "High capital intensity",
+            b: "Low customer demand",
+            c: "Poor management",
+            d: "High employee turnover",
+            correct: "a"
+        },
+        {
+            question: "33. The first stage of innovative thinking is ______.",
+            a: "evaluation",
+            b: "preparation",
+            c: "commercialization",
+            d: "implementation",
+            correct: "b"
+        },
+        {
+            question: "34. Critical thinking involves questioning, analysing, interpreting and ______ information.",
+            a: "ignoring",
+            b: "evaluating",
+            c: "destroying",
+            d: "selling",
+            correct: "b"
+        },
+        {
+            question: "35. The first step in critical thinking is to identify the ______.",
+            a: "profit",
+            b: "problem",
+            c: "customer",
+            d: "product",
+            correct: "b"
+        },
+        {
+            question: "36. The ability to look at a problem from different perspectives is a basic ______-thinking skill.",
+            a: "critical",
+            b: "financial",
+            c: "accounting",
+            d: "managerial",
+            correct: "a"
+        },
+        {
+            question: "37. Reflective thinking involves considering the larger context, meaning and ______ of an experience.",
+            a: "implications",
+            b: "profits",
+            c: "salaries",
+            d: "prices",
+            correct: "a"
+        },
+        {
+            question: "38. Creative thinking is the ability to come up with unique ______ solutions.",
+            a: "original",
+            b: "traditional",
+            c: "borrowed",
+            d: "expensive",
+            correct: "a"
+        },
+        {
+            question: "39. How many major types of innovation are identified in the material?",
+            a: "Two",
+            b: "Three",
+            c: "Four",
+            d: "Five",
+            correct: "c"
+        },
+        {
+            question: "40. Which type of innovation involves gradual and continuous improvements to an existing product or service?",
+            a: "Radical",
+            b: "Disruptive",
+            c: "Incremental",
+            d: "Sustaining",
+            correct: "c"
+        },
+        {
+            question: "41. The word entrepreneurship is derived from the French word ______.",
+            a: "Entrepreneur",
+            b: "Entreprendre",
+            c: "Enterprise",
+            d: "Entreprise",
+            correct: "b"
+        },
+        {
+            question: "42. The word Entreprendre means ______.",
+            a: "business",
+            b: "pledge",
+            c: "wealth",
+            d: "innovation",
+            correct: "b"
+        },
+        {
+            question: "43. Cultural entrepreneurship begins with a cultural ______ and leads to a cultural business.",
+            a: "product",
+            b: "idea",
+            c: "market",
+            d: "profit",
+            correct: "b"
+        },
+        {
+            question: "44. Cultural entrepreneurship can contribute to job and ______ creation.",
+            a: "wealth",
+            b: "political",
+            c: "academic",
+            d: "military",
+            correct: "a"
+        },
+        {
+            question: "45. NEPZA stands for Nigerian Export Processing Zones ______.",
+            a: "Administration",
+            b: "Authority",
+            c: "Association",
+            d: "Agency",
+            correct: "b"
+        },
+        {
+            question: "46. NIPC stands for Nigerian Investment Promotion ______.",
+            a: "Commission",
+            b: "Council",
+            c: "Corporation",
+            d: "Committee",
+            correct: "a"
+        },
+        {
+            question: "47. NEPC stands for Nigerian Export Promotion ______.",
+            a: "Commission",
+            b: "Council",
+            c: "Corporation",
+            d: "Committee",
+            correct: "b"
+        },
+        {
+            question: "48. NEPC encourages the growth of ______-oil exports from Nigeria.",
+            a: "high",
+            b: "non",
+            c: "crude",
+            d: "foreign",
+            correct: "b"
+        },
+        {
+            question: "49. ANE stands for Association of Nigerian ______.",
+            a: "Entrepreneurs",
+            b: "Exporters",
+            c: "Employers",
+            d: "Educators",
+            correct: "b"
+        },
+        {
+            question: "50. NEXIM Bank was established to provide easy access to ______ financing.",
+            a: "export",
+            b: "personal",
+            c: "political",
+            d: "agricultural",
+            correct: "a"
+        },
+        {
+            question: "51. Entrepreneurship support institutions act as catalysts for ______ businesses.",
+            a: "large",
+            b: "small",
+            c: "foreign",
+            d: "government",
+            correct: "b"
+        },
+        {
+            question: "52. Mentoring programmes match experienced entrepreneurs with ______ entrepreneurs.",
+            a: "old",
+            b: "young",
+            c: "foreign",
+            d: "retired",
+            correct: "b"
+        },
+        {
+            question: "53. An unstable political climate may discourage business because investors fear the safety and ______ of their investments.",
+            a: "security",
+            b: "profit",
+            c: "marketing",
+            d: "expansion",
+            correct: "a"
+        },
+        {
+            question: "54. Opportunity identification is the ability to identify a good idea and transform it into a business ______.",
+            a: "policy",
+            b: "concept",
+            c: "regulation",
+            d: "salary",
+            correct: "b"
+        },
+        {
+            question: "55. A good business concept should add value and generate ______.",
+            a: "revenue",
+            b: "taxes",
+            c: "debt",
+            d: "salaries",
+            correct: "a"
+        },
+        {
+            question: "56. Opportunity identification is an essential component of the ______ process.",
+            a: "accounting",
+            b: "entrepreneurial",
+            c: "political",
+            d: "manufacturing",
+            correct: "b"
+        },
+        {
+            question: "57. Entrepreneurs identify opportunities based on personal qualities, networks and ______ processes.",
+            a: "cognitive",
+            b: "financial",
+            c: "political",
+            d: "accounting",
+            correct: "a"
+        },
+        {
+            question: "58. Opportunity discovery involves being proactive in ______ chances.",
+            a: "avoiding",
+            b: "seizing",
+            c: "rejecting",
+            d: "delaying",
+            correct: "b"
+        },
+        {
+            question: "59. When choosing a business opportunity, an entrepreneur should examine his or her ______.",
+            a: "rivals",
+            b: "family",
+            c: "lecturers",
+            d: "neighbours",
+            correct: "a"
+        },
+        {
+            question: "60. The objective of brainstorming is to come up with many ______.",
+            a: "employees",
+            b: "ideas",
+            c: "products",
+            d: "companies",
+            correct: "b"
+        },
+        {
+            question: "61. During brainstorming, there should be no criticism, rewards or ______.",
+            a: "judgments",
+            b: "ideas",
+            c: "discussions",
+            d: "participation",
+            correct: "a"
+        },
+        {
+            question: "62. A focus group is guided by a ______.",
+            a: "manager",
+            b: "moderator",
+            c: "customer",
+            d: "secretary",
+            correct: "b"
+        },
+        {
+            question: "63. A typical focus group consists of approximately ______ to ______ recruited people.",
+            a: "2–4",
+            b: "5–7",
+            c: "8–14",
+            d: "20–30",
+            correct: "c"
+        },
+        {
+            question: "64. Which technique uses a graphical approach to turn an idea into a visual representation?",
+            a: "Brainwriting",
+            b: "Mind mapping",
+            c: "Focus grouping",
+            d: "Interviewing",
+            correct: "b"
+        },
+        {
+            question: "65. Persuading investors to invest in a groundbreaking concept is known as ______.",
+            a: "business planning",
+            b: "idea pitching",
+            c: "market research",
+            d: "risk analysis",
+            correct: "b"
+        },
+        {
+            question: "66. Identifying, generating and seizing new business prospects for a firm is known as ______.",
+            a: "business development",
+            b: "business closure",
+            c: "business taxation",
+            d: "business auditing",
+            correct: "a"
+        },
+        {
+            question: "67. A business plan outlines the company's objectives and ______ for achieving them.",
+            a: "strategies",
+            b: "salaries",
+            c: "employees",
+            d: "competitors",
+            correct: "a"
+        },
+        {
+            question: "68. The title page of a business plan contains the firm's name, address, logo and names of the ______.",
+            a: "customers",
+            b: "founders",
+            c: "competitors",
+            d: "suppliers",
+            correct: "b"
+        },
+        {
+            question: "69. The executive summary provides a quick description of the issue or ______.",
+            a: "proposition",
+            b: "salary",
+            c: "employee",
+            d: "competitor",
+            correct: "a"
+        },
+        {
+            question: "70. The mission statement guides the company's growth and ______.",
+            a: "direction",
+            b: "taxation",
+        
