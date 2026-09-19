@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .quiz-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+        button { display: block; width: 100%; margin: 10px 0; padding: 10px; border: none; border-radius: 4px; background-color: #007bff; color: white; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .correct { background-color: #28a745 !important; }
+        .wrong { background-color: #dc3545 !important; }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2 id="question">Question Text</h2>
+        <div id="options-container"></div>
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "What is 2 + 2?", a: "3", b: "4", c: "5", correct: "b" }
+        ];
+        let currentQuestion = 0;
+        const questionEl = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+
+        function loadQuestion() {
+            const currentData = quizData[currentQuestion];
+            questionEl.innerText = currentData.question;
+            optionsContainer.innerHTML = '';
+            ['a', 'b', 'c'].forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = currentData[option];
+                button.onclick = () => checkAnswer(option, button);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected, button) {
+            const correct = quizData[currentQuestion].correct;
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+            if (selected === correct) {
+                button.classList.add('correct');
+            } else {
+                button.classList.add('wrong');
+            }
+        }
+        loadQuestion();
+    </script>
+</body>
+</html>
