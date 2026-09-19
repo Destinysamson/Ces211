@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CES 211 — Practice Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --correct: #16a34a;
+      --correct-bg: #dcfce7;
+      --wrong: #dc2626;
+      --wrong-bg: #fee2e2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    /* Tracker Grid */
+    .nav-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+    }
+
+    .nav-card h2 {
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 0.4rem;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .q-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 0.2rem;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .q-badge:hover {
+      border-color: var(--primary);
+    }
+
+    .q-badge.correct {
+      background: var(--correct-bg);
+      border-color: var(--correct);
+      color: var(--correct);
+    }
+
+    .q-badge.wrong {
+      background: var(--wrong-bg);
+      border-color: var(--wrong);
+      color: var(--wrong);
+    }
+
+    /* Question Cards */
+    .question-card {
+      background: var(--card-bg);
+      padding: 1.25rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+
+    .question-num {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .option-btn:hover:not([disabled]) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .option-btn.selected-correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct) !important;
+      color: var(--correct);
+      font-weight: 600;
+    }
+
+    .option-btn.selected-wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong) !important;
+      color: var(--wrong);
+      font-weight: 600;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .feedback {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      color: var(--correct);
+    }
+
+    .feedback.wrong {
+      color: var(--wrong);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>CES 211 — ENTREPRENEURSHIP AND INNOVATION</h1>
+    <p>100 Objective Questions & Answers (Chapters 1–8)</p>
+    <div class="score-board">
+      <div>Score: <span id="score">0</span> / 100</div>
+      <div>Answered: <span id="answered-count">0</span> / 100</div>
+    </div>
+  </header>
+
+  <!-- Question Tracker -->
+  <div class="nav-card">
+    <h2>Question Tracker</h2>
+    <div class="grid-container" id="grid-container"></div>
+  </div>
+
+  <!-- Questions Container -->
+  <div id="quiz-container"></div>
+</div>
+
+<script>
+const quizData = [
+  { id: 1, q: "One major objective of entrepreneurship education is to cultivate an ______ mindset.", options: ["A. Administrative", "B. Entrepreneurial", "C. Political", "D. Bureaucratic"], answer: "B" },
+  { id: 2, q: "Entrepreneurship education develops students' ability to recognize and ______ opportunities.", options: ["A. reject", "B. avoid", "C. seize", "D. postpone"], answer: "C" },
+  { id: 3, q: "A proactive, risk-taking and ______ approach to problem-solving is encouraged by entrepreneurship education.", options: ["A. traditional", "B. innovative", "C. passive", "D. conservative"], answer: "B" },
+  { id: 4, q: "Entrepreneurship education teaches the fundamentals of business planning, financial management and ______ acquisition.", options: ["A. resource", "B. political", "C. cultural", "D. social"], answer: "A" },
+  { id: 5, q: "Developing business models, prototyping and customer ______ are practical entrepreneurial skills.", options: ["A. rejection", "B. validation", "C. avoidance", "D. replacement"], answer: "B" },
+  { id: 6, q: "Entrepreneurship education prepares students to navigate the challenges and ______ of the entrepreneurial process.", options: ["A. certainties", "B. uncertainties", "C. profits", "D. policies"], answer: "B" },
+  { id: 7, q: "One learning outcome of entrepreneurship education is the ability to identify opportunities, take calculated risks and ______.", options: ["A. innovate", "B. speculate", "C. withdraw", "D. complain"], answer: "A" },
+  { id: 8, q: "Effective communication and ______ are important entrepreneurial learning outcomes.", options: ["A. isolation", "B. collaboration", "C. competition", "D. separation"], answer: "B" },
+  { id: 9, q: "Adaptability refers to the capacity to adjust to changing ______.", options: ["A. circumstances", "B. salaries", "C. positions", "D. accounts"], answer: "A" },
+  { id: 10, q: "The skill to generate innovative solutions to problems is known as ______.", options: ["A. creativity", "B. accounting", "C. delegation", "D. negotiation"], answer: "A" },
+  { id: 11, q: "The ability to prioritize tasks, set goals and manage time efficiently is called ______ management.", options: ["A. financial", "B. time", "C. human", "D. resource"], answer: "B" },
+  { id: 12, q: "The commitment to stay curious and continuously expand one's knowledge is known as ______ learning.", options: ["A. traditional", "B. continuous", "C. temporary", "D. seasonal"], answer: "B" },
+  { id: 13, q: "Entrepreneurship education can reduce dependence on traditional ______-seeking.", options: ["A. business", "B. employment", "C. job", "D. market"], answer: "C" },
+  { id: 14, q: "Entrepreneurship involves creating new business ideas and transforming them into tangible goods and ______.", options: ["A. capital", "B. services", "C. theories", "D. policies"], answer: "B" },
+  { id: 15, q: "According to Schumpeter, entrepreneurship involves new combinations of ______.", options: ["A. employees", "B. resources", "C. governments", "D. customers"], answer: "B" },
+  { id: 16, q: "The success of entrepreneurship hinges largely on creativity and ______.", options: ["A. taxation", "B. innovation", "C. bureaucracy", "D. employment"], answer: "B" },
+  { id: 17, q: "Which of the following is a characteristic of entrepreneurship?", options: ["A. Risk-taking", "B. Risk avoidance", "C. Dependence", "D. Inactivity"], answer: "A" },
+  { id: 18, q: "Entrepreneurship involves transforming raw materials into finished products through ______ addition.", options: ["A. market", "B. value", "C. political", "D. social"], answer: "B" },
+  { id: 19, q: "Entrepreneurship is regarded as a ______-oriented activity.", options: ["A. result", "B. government", "C. family", "D. salary"], answer: "A" },
+  { id: 20, q: "One major objective of entrepreneurship is the creation of ______ opportunities.", options: ["A. employment", "B. political", "C. recreational", "D. foreign"], answer: "A" },
+  { id: 21, q: "Entrepreneurship contributes to ______ alleviation through employment creation.", options: ["A. poverty", "B. technology", "C. competition", "D. inflation"], answer: "A" },
+  { id: 22, q: "An entrepreneur is a generator of business ideas, organizer of resources and ______ of business.", options: ["A. critic", "B. manager", "C. customer", "D. employee"], answer: "B" },
+  { id: 23, q: "An entrepreneur must have confidence in himself or herself and believe in his or her ______.", options: ["A. competitors", "B. ideas", "C. employees", "D. customers"], answer: "B" },
+  { id: 24, q: "Which of the following is a characteristic of a good entrepreneur?", options: ["A. Pessimism", "B. Optimism", "C. Laziness", "D. Indecision"], answer: "B" },
+  { id: 25, q: "Intrapreneurship creates opportunities for ______ to exhibit entrepreneurial skills within an organization.", options: ["A. customers", "B. employees", "C. competitors", "D. suppliers"], answer: "B" },
+  { id: 26, q: "The psychological theory of entrepreneurship emphasizes personality traits, locus of control and the need for ______.", options: ["A. achievement", "B. employment", "C. taxation", "D. ownership"], answer: "A" },
+  { id: 27, q: "Entrepreneurship involves creating or obtaining ______ value.", options: ["A. economic", "B. political", "C. cultural", "D. personal"], answer: "A" },
+  { id: 28, q: "Entrepreneurs take the majority of the risks and reap the majority of the ______.", options: ["A. losses", "B. returns", "C. expenses", "D. taxes"], answer: "B" },
+  { id: 29, q: "Which of the following is a type of entrepreneurship?", options: ["A. Cultural entrepreneurship", "B. Administrative entrepreneurship", "C. Bureaucratic entrepreneurship", "D. Government entrepreneurship"], answer: "A" },
+  { id: 30, q: "A well-written ______ plan is an indicator of entrepreneurial success.", options: ["A. business", "B. political", "C. family", "D. academic"], answer: "A" },
+  { id: 31, q: "Market indicators include business-to-business and business-to-______ models.", options: ["A. government", "B. customer", "C. employee", "D. supplier"], answer: "B" },
+  { id: 32, q: "Which of the following is an industry indicator?", options: ["A. High capital intensity", "B. Low customer demand", "C. Poor management", "D. High employee turnover"], answer: "A" },
+  { id: 33, q: "The first stage of innovative thinking is ______.", options: ["A. evaluation", "B. preparation", "C. commercialization", "D. implementation"], answer: "B" },
+  { id: 34, q: "Critical thinking involves questioning, analysing, interpreting and ______ information.", options: ["A. ignoring", "B. evaluating", "C. destroying", "D. selling"], answer: "B" },
+  { id: 35, q: "The first step in critical thinking is to identify the ______.", options: ["A. profit", "B. problem", "C. customer", "D. product"], answer: "B" },
+  { id: 36, q: "The ability to look at a problem from different perspectives is a basic ______-thinking skill.", options: ["A. critical", "B. financial", "C. accounting", "D. managerial"], answer: "A" },
+  { id: 37, q: "Reflective thinking involves considering the larger context, meaning and ______ of an experience.", options: ["A. implications", "B. profits", "C. salaries", "D. prices"], answer: "A" },
+  { id: 38, q: "Creative thinking is the ability to come up with unique ______ solutions.", options: ["A. original", "B. traditional", "C. borrowed", "D. expensive"], answer: "A" },
+  { id: 39, q: "How many major types of innovation are identified in the material?", options: ["A. Two", "B. Three", "C. Four", "D. Five"], answer: "C" },
+  { id: 40, q: "Which type of innovation involves gradual and continuous improvements to an existing product or service?", options: ["A. Radical", "B. Disruptive", "C. Incremental", "D. Sustaining"], answer: "C" },
+  { id: 41, q: "The word entrepreneurship is derived from the French word ______.", options: ["A. Entrepreneur", "B. Entreprendre", "C. Enterprise", "D. Entreprise"], answer: "B" },
+  { id: 42, q: "The word Entreprendre means ______.", options: ["A. business", "B. pledge", "C. wealth", "D. innovation"], answer: "B" },
+  { id: 43, q: "Cultural entrepreneurship begins with a cultural ______ and leads to a cultural business.", options: ["A. product", "B. idea", "C. market", "D. profit"], answer: "B" },
+  { id: 44, q: "Cultural entrepreneurship can contribute to job and ______ creation.", options: ["A. wealth", "B. political", "C. academic", "D. military"], answer: "A" },
+  { id: 45, q: "NEPZA stands for Nigerian Export Processing Zones ______.", options: ["A. Administration", "B. Authority", "C. Association", "D. Agency"], answer: "B" },
+  { id: 46, q: "NIPC stands for Nigerian Investment Promotion ______.", options: ["A. Commission", "B. Council", "C. Corporation", "D. Committee"], answer: "A" },
+  { id: 47, q: "NEPC stands for Nigerian Export Promotion ______.", options: ["A. Commission", "B. Council", "C. Corporation", "D. Committee"], answer: "B" },
+  { id: 48, q: "NEPC encourages the growth of ______-oil exports from Nigeria.", options: ["A. high", "B. non", "C. crude", "D. foreign"], answer: "B" },
+  { id: 49, q: "ANE stands for Association of Nigerian ______.", options: ["A. Entrepreneurs", "B. Exporters", "C. Employers", "D. Educators"], answer: "B" },
+  { id: 50, q: "NEXIM Bank was established to provide easy access to ______ financing.", options: ["A. export", "B. personal", "C. political", "D. agricultural"], answer: "A" },
+  { id: 51, q: "Entrepreneurship support institutions act as catalysts for ______ businesses.", options: ["A. large", "B. small", "C. foreign", "D. government"], answer: "B" },
+  { id: 52, q: "Mentoring programmes match experienced entrepreneurs with ______ entrepreneurs.", options: ["A. old", "B. young", "C. foreign", "D. retired"], answer: "B" },
+  { id: 53, q: "An unstable political climate may discourage business because investors fear the safety and ______ of their investments.", options: ["A. security", "B. profit", "C. marketing", "D. expansion"], answer: "A" },
+  { id: 54, q: "Opportunity identification is the ability to identify a good idea and transform it into a business ______.", options: ["A. policy", "B. concept", "C. regulation", "D. salary"], answer: "B" },
+  { id: 55, q: "A good business concept should add value and generate ______.", options: ["A. revenue", "B. taxes", "C. debt", "D. salaries"], answer: "A" },
+  { id: 56, q: "Opportunity identification is an essential component of the ______ process.", options: ["A. accounting", "B. entrepreneurial", "C. political", "D. manufacturing"], answer: "B" },
+  { id: 57, q: "Entrepreneurs identify opportunities based on personal qualities, networks and ______ processes.", options: ["A. cognitive", "B. financial", "C. political", "D. accounting"], answer: "A" },
+  { id: 58, q: "Opportunity discovery involves being proactive in ______ chances.", options: ["A. avoiding", "B. seizing", "C. rejecting", "D. delaying"], answer: "B" },
+  { id: 59, q: "When choosing a business opportunity, an entrepreneur should examine his or her ______.", options: ["A. rivals", "B. family", "C. lecturers", "D. neighbours"], answer: "A" },
+  { id: 60, q: "The objective of brainstorming is to come up with many ______.", options: ["A. employees", "B. ideas", "C. products", "D. companies"], answer: "B" },
+  { id: 61, q: "During brainstorming, there should be no criticism, rewards or ______.", options: ["A. judgments", "B. ideas", "C. discussions", "D. participation"], answer: "A" },
+  { id: 62, q: "A focus group is guided by a ______.", options: ["A. manager", "B. moderator", "C. customer", "D. secretary"], answer: "B" },
+  { id: 63, q: "A typical focus group consists of approximately ______ to ______ recruited people.", options: ["A. 2–4", "B. 5–7", "C. 8–14", "D. 20–30"], answer: "C" },
+  { id: 64, q: "Which technique uses a graphical approach to turn an idea into a visual representation?", options: ["A. Brainwriting", "B. Mind mapping", "C. Focus grouping", "D. Interviewing"], answer: "B" },
+  { id: 65, q: "Persuading investors to invest in a groundbreaking concept is known as ______.", options: ["A. business planning", "B. idea pitching", "C. market research", "D. risk analysis"], answer: "B" },
+  { id: 66, q: "Identifying, generating and seizing new business prospects for a firm is known as ______.", options: ["A. business development", "B. business closure", "C. business taxation", "D. business auditing"], answer: "A" },
+  { id: 67, q: "A business plan outlines the company's objectives and ______ for achieving them.", options: ["A. strategies", "B. salaries", "C. employees", "D. competitors"], answer: "A" },
+  { id: 68, q: "The title page of a business plan contains the firm's name, address, logo and names of the ______.", options: ["A. customers", "B. founders", "C. competitors", "D. suppliers"], answer: "B" },
+  { id: 69, q: "The executive summary provides a quick description of the issue or ______.", options: ["A. proposition", "B. salary", "C. employee", "D. competitor"], answer: "A" },
+  { id: 70, q: "The mission statement guides the company's growth and ______.", options: ["A. direction", "B. taxation", "C. salary", "D. production"], answer: "A" },
+  { id: 71, q: "Market analysis involves competition analysis, marketing strategy, market research and sales ______.", options: ["A. expenses", "B. forecasts", "C. salaries", "D. taxes"], answer: "B" },
+  { id: 72, q: "Technical analysis outlines the results of the technical ______ study.", options: ["A. marketing", "B. feasibility", "C. accounting", "D. leadership"], answer: "B" },
+  { id: 73, q: "The simplest form of business ownership is ______.", options: ["A. partnership", "B. corporation", "C. sole proprietorship", "D. cooperative"], answer: "C" },
+  { id: 74, q: "In a sole proprietorship, there is only ______ owner.", options: ["A. one", "B. two", "C. three", "D. several"], answer: "A" },
+  { id: 75, q: "In a general partnership, partners share the company's gains and ______.", options: ["A. assets", "B. losses", "C. employees", "D. customers"], answer: "B" },
+  { id: 76, q: "Small Business Management refers to practices and strategies used in running a ______-scale enterprise.", options: ["A. large", "B. small", "C. multinational", "D. governmental"], answer: "B" },
+  { id: 77, q: "Small businesses commonly operate with limited ______.", options: ["A. resources", "B. customers", "C. markets", "D. technology"], answer: "A" },
+  { id: 78, q: "Family business involves family members in the ownership and ______ of the business.", options: ["A. management", "B. taxation", "C. marketing", "D. advertising"], answer: "A" },
+  { id: 79, q: "Leadership primarily involves influencing and ______ others to achieve common goals.", options: ["A. inspiring", "B. controlling", "C. punishing", "D. replacing"], answer: "A" },
+  { id: 80, q: "Management focuses on planning, organizing and ______ resources.", options: ["A. wasting", "B. controlling", "C. selling", "D. borrowing"], answer: "B" },
+  { id: 81, q: "Which leadership style inspires followers to exceed their self-interests for the good of the organization?", options: ["A. Autocratic"
